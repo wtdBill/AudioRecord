@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AudioRecordActivity">
+
+
+    <Button
+        android:id="@+id/start_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="100dp"
+        android:text="开始录音"
+        android:textColor="#000000"
+        android:textSize="18sp">
+    </Button>
+
+    <Button
+        android:id="@+id/stop_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/start_record"
+        android:layout_marginTop="50dp"
+        android:text="结束录音"
+        android:textColor="#000000"
+        android:textSize="18sp">
+    </Button>
+
+    <Button
+        android:id="@+id/play_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/stop_record"
+        android:layout_marginTop="50dp"
+        android:text="播放录音"
+        android:textColor="#000000"
+        android:textSize="18sp">
+    </Button>
+
+    <Button
+        android:id="@+id/add_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/play_audio"
+        android:layout_marginTop="50dp"
+        android:text="加头文件"
+        android:textColor="#000000"
+        android:textSize="18sp">
+    </Button>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
