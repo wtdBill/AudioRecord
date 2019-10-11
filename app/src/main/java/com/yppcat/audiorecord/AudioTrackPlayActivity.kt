@@ -13,6 +13,10 @@ import kotlinx.android.synthetic.main.activity_audio_track_play.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.media.MediaRecorder
 
 
 class AudioTrackPlayActivity : AppCompatActivity() {
@@ -31,13 +35,14 @@ class AudioTrackPlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_track_play)
 
+        initStaticMode()
         mode_static.setOnClickListener {
             it.isEnabled = false
-            releaseAudioTrack()
+//            releaseAudioTrack()
             audioTrack = AudioTrack(
-                AudioManager.STREAM_MUSIC,
+                MediaRecorder.AudioSource.MIC,
                 frequency,
-                AudioFormat.CHANNEL_OUT_STEREO,
+                AudioFormat.CHANNEL_OUT_DEFAULT,
                 AudioFormat.ENCODING_PCM_16BIT,
                 audioData?.size!!,
                 AudioTrack.MODE_STATIC
@@ -48,6 +53,19 @@ class AudioTrackPlayActivity : AppCompatActivity() {
             audioTrack.play()
             Log.d(TAG, "Playing")
             it.isEnabled = true
+        }
+
+        mode_stream.setOnClickListener {
+            it.isEnabled = false
+            audioTrack = AudioTrack(
+                AudioManager.STREAM_MUSIC,
+                frequency,
+                AudioFormat.CHANNEL_OUT_STEREO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                audioData?.size!!,
+                AudioTrack.MODE_STREAM
+            )
+            val tempBuffer = ByteArray(284848)
         }
     }
 
@@ -60,9 +78,8 @@ class AudioTrackPlayActivity : AppCompatActivity() {
                     val inputStream = File(fileName).inputStream()
                     try {
                         val outputStream = ByteArrayOutputStream(284848)
-                        val b: Int = inputStream.read()
-                        while (b != -1) {
-                            outputStream.write(b)
+                        while ((inputStream.read()) != -1) {
+                            outputStream.write(inputStream.read())
                         }
                         Log.d(TAG, "Got the Data")
                         audioData = outputStream.toByteArray()
@@ -82,16 +99,18 @@ class AudioTrackPlayActivity : AppCompatActivity() {
                 Log.d(TAG, "Enabled button")
             }
         }
-
+        asyncTask.execute()
     }
 
     private fun releaseAudioTrack() {
-        audioTrack.let {
-            Log.d(TAG, "Stopping")
-            it.stop()
-            Log.d(TAG, "Releasing")
-            it.release()
-            Log.d(TAG, "Nulling")
+        if (audioTrack != null) {
+            audioTrack.let {
+                Log.d(TAG, "Stopping")
+                it.stop()
+                Log.d(TAG, "Releasing")
+                it.release()
+                Log.d(TAG, "Nulling")
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.yppcat.audiorecord
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioRecord
@@ -43,9 +44,13 @@ class AudioRecordActivity : AppCompatActivity() {
         add_head.setOnClickListener {
             addHead()
         }
+        play_audio.setOnClickListener {
+            val intent = Intent(this@AudioRecordActivity,AudioTrackPlayActivity::class.java)
+            startActivity(intent)
+        }
     }
 
-    private fun threadStart(){
+    private fun threadStart() {
         mThread = Thread {
             try {
                 startRecord()
@@ -141,14 +146,18 @@ class AudioRecordActivity : AppCompatActivity() {
             ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             val permission = arrayOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.RECORD_AUDIO
             )
             this.requestPermissions(permission, 0)
-        }else{
+        } else {
             threadStart()
         }
     }
@@ -158,9 +167,9 @@ class AudioRecordActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == 0){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-               threadStart()
+        if (requestCode == 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+                threadStart()
             }
         }
     }
